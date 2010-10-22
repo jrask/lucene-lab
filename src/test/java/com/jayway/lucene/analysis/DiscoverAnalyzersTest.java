@@ -1,4 +1,4 @@
-package com.jayway.lucene.index;
+package com.jayway.lucene.analysis;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -21,12 +21,13 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jayway.lucene.analysis.CustomAnalyzer;
+import com.jayway.lucene.index.IndexStore;
+import com.jayway.lucene.index.IndexUtils;
 
 public class DiscoverAnalyzersTest {
 
