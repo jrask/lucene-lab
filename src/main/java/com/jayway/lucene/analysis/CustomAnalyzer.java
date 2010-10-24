@@ -16,7 +16,7 @@ import org.apache.lucene.analysis.TokenStream;
  *
  */
 public class CustomAnalyzer extends Analyzer {
-
+	
 	@Override
 	public TokenStream tokenStream(String fieldName, Reader reader) {
 		return new CharTokenizer(reader) {

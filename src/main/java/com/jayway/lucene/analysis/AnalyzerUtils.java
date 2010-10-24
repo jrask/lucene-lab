@@ -19,17 +19,22 @@ public class AnalyzerUtils {
 			System.out.print(analyzer.getClass().getSimpleName() + ":");
 			displayTokens(analyzer.tokenStream("contents", new StringReader(text))); 
 		}
-
+ 
 	}
 
-	public static void displayTokens(TokenStream stream) throws IOException {
+	public static void displayTokens(TokenStream stream)  {
 
 		/*
 		*/
 		TermAttribute term = (TermAttribute) stream
 				.addAttribute(TermAttribute.class);
-		while (stream.incrementToken()) {
-			System.out.print("[" + term.term() + "] "); // B
+		try {
+			while (stream.incrementToken()) {
+				System.out.print("[" + term.term() + "] "); // B
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		System.out.println();
 	}

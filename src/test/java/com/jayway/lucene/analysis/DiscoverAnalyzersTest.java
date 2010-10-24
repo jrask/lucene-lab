@@ -13,7 +13,6 @@ import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
@@ -25,11 +24,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.jayway.lucene.analysis.CustomAnalyzer;
+import com.jayway.lucene.ParentTestCase;
 import com.jayway.lucene.index.IndexStore;
 import com.jayway.lucene.index.IndexUtils;
 
-public class DiscoverAnalyzersTest {
+public class DiscoverAnalyzersTest extends ParentTestCase{
 
 	
 	private Analyzer standard = new StandardAnalyzer(Version.LUCENE_30);
@@ -38,13 +37,12 @@ public class DiscoverAnalyzersTest {
 	private Analyzer keyword = new KeywordAnalyzer();
 	private Analyzer stop = new StopAnalyzer(Version.LUCENE_30);
 	private Analyzer custom = new CustomAnalyzer();
-	
-	private IndexStore index;
+
 	
 	@Before
 	public void setupIndex() throws CorruptIndexException, LockObtainFailedException, IOException, InterruptedException {
 		index = new IndexStore(new RAMDirectory(),custom,custom,"body");
-		
+		index.debugAnalyzerDuringSearch = true;
 		addDocument(
 				defaultConfiguredField("id", "1"),
 				defaultConfiguredField("title", "The art of Adventure racing from wikipedia"),
@@ -55,20 +53,13 @@ public class DiscoverAnalyzersTest {
 				defaultConfiguredField("keys", "JaVa LuCeNe FoOd"));
 	}
 	
-	private void addDocument(Field... fields) throws CorruptIndexException, IOException, InterruptedException {
-		Document doc = new Document();
-		for (Field field : fields) {
-			doc.add(field);
-		}
-		index.addDocument(doc);
-		index.commit();
-	}
+
 
 	@Test
 	public void simpleExactTermSearchWorksWithCustomAnalyzer() throws IOException, ParseException {
 		assertEquals(1, index.search(new TermQuery(new Term("id","1"))).length);
 		assertEquals(1, index.search(new TermQuery(new Term("author","johan.rask@jayway.com"))).length);	
-		assertEquals(0, index.search("title:The art of").length);
+		assertEquals(0, index.search("(title:The art of)").length);
 		assertEquals(1, index.search("title:\"The art of Adventure racing from wikipedia\"").length);
 		assertEquals(0, index.search("title:the art of Adventure racing from wikipedia").length);
 		assertEquals(0, index.search("title:Adventure racing").length);
@@ -105,8 +96,5 @@ public class DiscoverAnalyzersTest {
 		assertEquals(1, index.search("keys:JaVa").length);
 		assertEquals(0,  index.search("keys:java").length);
 	}
-	
-	private Field defaultConfiguredField(String key, String value) {
-		return new Field(key, value, Store.YES, Field.Index.ANALYZED);
-	}
+
 }

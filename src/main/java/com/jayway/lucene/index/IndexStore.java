@@ -18,6 +18,7 @@ import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.NoSuchDirectoryException;
 import org.apache.lucene.util.Version;
 
+import com.jayway.lucene.analysis.DebugQueryParser;
 import com.jayway.lucene.index.internal.SearcherManager;
 
 
@@ -42,7 +43,7 @@ public class IndexStore {
 				MaxFieldLength.UNLIMITED);
 		searcherManager = new SearcherManager(writer);
 	
-		queryParser = new QueryParser(Version.LUCENE_30, defaultQueryField, queryAnalyzer);
+		queryParser = new DebugQueryParser(Version.LUCENE_30, defaultQueryField, queryAnalyzer);
 	}
 	
 	/**
@@ -138,5 +139,9 @@ public class IndexStore {
 	public void clearIndex() throws IOException, InterruptedException {
 		writer.deleteAll();
 		commit();
+	}
+
+	public Analyzer getAnalyzer() {
+		return writer.getAnalyzer();
 	}
 }
