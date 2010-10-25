@@ -1,6 +1,7 @@
 package com.jayway.lucene.analysis;
 
-import java.io.File;
+import static junit.framework.Assert.assertEquals;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,6 +10,7 @@ import java.util.Date;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.Query;
@@ -16,14 +18,10 @@ import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jayway.lucene.ParentTestCase;
 import com.jayway.lucene.index.IndexStore;
-import com.jayway.lucene.index.IndexUtils;
-
-import static junit.framework.Assert.*;
 
 public class DiscoverNumbersAndBoostingTest extends ParentTestCase{
 
@@ -35,32 +33,23 @@ public class DiscoverNumbersAndBoostingTest extends ParentTestCase{
 		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
 		index = new IndexStore(new RAMDirectory(),analyzer,analyzer,"body");
 		index.debugAnalyzerDuringSearch = true;
-
-		//TODO - Index date and price that can be found with a range query
-		
-		addDocument(
-				defaultConfiguredField("id", "1"),
-				defaultConfiguredField("date", format.parse("20100102").getTime()),
-				defaultConfiguredField("price", 10.1)
-				// date and price here
-		);
-		addDocument(1.5f,
-				defaultConfiguredField("id", "2"),
-				defaultConfiguredField("date", format.parse("20100104").getTime()),
-				defaultConfiguredField("price", 20.5)
-				// date and price here
-		);
 	}
 
 	@Test
-	public void testPriceRangeQuery() throws IOException {
+	public void testPriceRangeQuery() throws IOException, InterruptedException {
+
+		addDocument(defaultConfiguredField("price", 10.1));
+		addDocument(1.5f,defaultConfiguredField("price", 20.5));
+		
 		Query q = NumericRangeQuery.newDoubleRange("price",10d,19d, false, false);
 		assertEquals(1, index.search(q).length);
 	}
 	
 	@Test
-//	@Ignore
-	public void testDateRangeQuery() throws ParseException, IOException, org.apache.lucene.queryParser.ParseException {
+	public void testDateRangeQuery() throws ParseException, IOException, org.apache.lucene.queryParser.ParseException, InterruptedException {
+		addDocument(defaultConfiguredField("date", format.parse("20100102").getTime()));
+		addDocument(defaultConfiguredField("date", format.parse("20100104").getTime()));
+		
 		Date from = format.parse("20100101");
 		Date to = format.parse("20100103");
 		Query q = NumericRangeQuery.newLongRange("date",from.getTime(), 
@@ -68,8 +57,31 @@ public class DiscoverNumbersAndBoostingTest extends ParentTestCase{
 		assertEquals(1, index.search(q).length);
 	}
 	
+	
+	//TODO - Explain why the result is ordered the way it is?
 	@Test
-	public void testBoosting() {
+	public void showSimpleImplicitBoosting() throws CorruptIndexException, IOException, InterruptedException, org.apache.lucene.queryParser.ParseException {
+		addDocument(
+				defaultConfiguredField("title", "This is a longer sentence with a title"));
+		addDocument(
+				defaultConfiguredField("title", "A title"));
 		
+		Document docs[] = index.search("title:title");
+		assertEquals(2, docs.length);
+		assertEquals("A title", docs[0].get("title"));
+	}
+
+	@Test
+	public void showSimpleExplicitDocumentBoosting() {
+		//TODO - Copy code in test above and explicit boosting to document so that
+		// the sort order is reversed
+		// assertEquals("This is a longer sentence with a title", docs[0].get("title"));
+	}
+	
+	@Test
+	public void showSimpleExplicitFieldBoosting() {
+		//TODO - Copy code in test above and explicit boosting to fields so that
+		// the sort order is reversed		
+		// assertEquals("This is a longer sentence with a title", docs[0].get("title"));
 	}
 }

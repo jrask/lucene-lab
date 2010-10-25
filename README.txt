@@ -9,7 +9,7 @@ Lucene Core Lab
 
  - Explain what lucene does
  - Short about Documents and Fields
- - Short about analyzers, tokenizers, indexing, queryParser
+ - Short about analyzers, tokenizers vs. filters, indexing, queryParser
  - Where does todays lab fit in indexing and search process
    [Some drawing here]
 
@@ -22,7 +22,7 @@ writing to an index and searching the index.
 
 
 #####################
- Phase I - Analysis
+ Analysis
 #####################
 
 1.1. Go through each testcase in DiscoverAnalyzersTest.java and make sure that you understand
@@ -43,10 +43,11 @@ writing to an index and searching the index.
  
  Discussions?!
  
- 
 1.3. Change back to CustomAnalyzer again and try to figure out how to change
- the implementation of CustomeAnalyzer so that it will work with the current
+ the implementation of CustomAnalyzer so that it will work with the current
  test suite.
+  
+  Hint: We want to create a whitespace analyzer
   
 1.4. Change to Standard analyzer 
 	
@@ -59,16 +60,21 @@ writing to an index and searching the index.
 1.6. Field "keys" should be case sensitive so a search for "java" should not match
   "JaVa". It is important that other fields work as expected. There are a number
   of ways to do this, but one way gives you extra points.
+  
+1.7 - Extra assignment, change CustomAnalyzer so it outputs the same result as
+      SimpleAnalyzer.
+  Add @Ignore to all tests except displayAnalyzerTokens()
 
 #################################
- Phase II - Numeric Fields
+ Numeric Fields
 #################################
 
 Open DiscoverNumbersAndBoostingTest.java.
 Notice that there is not so much code in this one, it is your job to index documents
 so it works. Go through the TODOs in in class, more info below.
 
- Hint: NumericField, NumericFieldQueryParser...
+ 
+ Hint: NumericField, NumericFieldQueryParser, do not use QueryParser. Why?
 
 2.1. Index a new field price with a float value and try to find it with a range query.
 
@@ -79,3 +85,10 @@ so it works. Go through the TODOs in in class, more info below.
 ###########################
  Boosting fields for relevance
 ###########################
+
+Stay with the same test file.
+
+
+3.1. Explain why the results are ordered they way they are in showSimpleImplicitBoosting() ? 
+
+3.2 Finish two test cases with explicit boosting of document and fields.

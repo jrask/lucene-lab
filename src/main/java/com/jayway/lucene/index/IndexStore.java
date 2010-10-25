@@ -74,10 +74,17 @@ public class IndexStore {
 	 * @throws InterruptedException
 	 */
 	public void commit() throws CorruptIndexException, IOException, InterruptedException {
-		writer.commit();
+		// TODO - There is a new feature in lucene 3 called "near realtime search" so you can open
+		// a reader without committing data. If we remove the commit call here, it will still work
+		// Have to investigate this a little more.
+		//writer.commit();
 		searcherManager.maybeReopen();
 	}
 
+	
+	public void rollback() throws IOException {
+		writer.rollback();
+	}
 	
 	/**
 	 * Closes the index

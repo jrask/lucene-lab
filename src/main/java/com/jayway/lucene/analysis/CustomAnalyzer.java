@@ -25,8 +25,6 @@ public class CustomAnalyzer extends Analyzer {
 			protected boolean isTokenChar(char c) {
 				return true;
 			}
-			
-
 	};
 	}
 }
