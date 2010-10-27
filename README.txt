@@ -21,40 +21,52 @@ Take a look at IndexStore.java. This class encapsulates some functionality like
 writing to an index and searching the index. 
 
 
+#########################################
+ Introduction to indexing data
+#########################################
+
+Open DiscoverBasicIndexing.java
+
+We can go through the different Field options that are available
+
+
+#########################################
+Searching - different query types
+#########################################
+
+Open DisoverQueryTest.java
+
+Each of these tests are marked with @Ignore
+Your task is to remove all @Ignore, and finish each test case
+by implementing the correct Query instance.
+
+
 #####################
  Analysis
 #####################
 
-1.1. Go through simpleExactTermSearchWorksWithCustomAnalyzer() testcase in
- DiscoverAnalyzersTest.java and make sure that you understand
- what it does and why you get those results. Open CustomAnalyzer.java and have
- a quick look at it.
- [We can go through the code to explain what it does?]
+Open DiscoverAnalyzersTest.java
+
+1.1. Go through simpleExactTermSearchWorksWithCustomAnalyzer() testcase 
+ and make sure that you understand what it does and why you get those results.
+  Open CustomAnalyzer.java and have a quick look at it.
+
  Does the code and result make sense?
  How would you expect it to work?
  Discussions?!
 
-1.2. Change setupIndex() method and change to use whitespace analyzer instead of 
+1.2. Change the call to setupIndex() method and change to use whitespace analyzer instead of 
  custom analyzer and run the test again. What happens?!
  Make some changes in the test case to see if you can make it work.
  
- Mark the testcase with @Ignore and remove all other @Ignore and run the
- tests again. 
-
- Go through the testcases. Does it work as expected? How would you like it to work?
- 
- Discussions?!
  
 1.3. Change back to CustomAnalyzer again and try to figure out how to change
  the implementation of CustomAnalyzer so that it will work with the current
  test suite.
   
-  Hint: We want to create a whitespace analyzer
-  
-1.4. Change to Standard analyzer 
-	
-	Run the tests again and try to figure out how to change all searches so 
-	that it works with this analyzer.
+1.4. Go through each testcase, remove @Ignore annotation and change analyzer to standard
+    and make the testcase work by changing the search.
+
 
 Open DiscoverMoreAnalyzers.java
 
@@ -67,7 +79,6 @@ Open DiscoverMoreAnalyzers.java
   
 1.7 - Extra assignment, change CustomAnalyzer so it outputs the same result as
       SimpleAnalyzer.
-  Add @Ignore to all tests except displayAnalyzerTokens()
 
 #################################
  Numeric Fields

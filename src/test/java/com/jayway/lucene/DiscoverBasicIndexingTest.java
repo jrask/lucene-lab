@@ -15,11 +15,10 @@ import org.junit.Test;
 
 import com.jayway.lucene.index.IndexStore;
 
-
 public class DiscoverBasicIndexingTest extends AbstractParentTestCase {
 
 	public void setupIndex(Analyzer analyzer) throws CorruptIndexException, LockObtainFailedException, IOException, InterruptedException {
-		index = new IndexStore(new RAMDirectory(),analyzer,analyzer,"body");
+		index = new IndexStore(new RAMDirectory(),analyzer,analyzer,"body",debugQueryParser);
 		index.debugAnalyzerDuringSearch = false;
 	}
 	

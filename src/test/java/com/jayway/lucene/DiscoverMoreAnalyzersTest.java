@@ -21,7 +21,7 @@ public class DiscoverMoreAnalyzersTest extends AbstractParentTestCase {
 
 	
 	public void setupIndex(Analyzer analyzer) throws CorruptIndexException, LockObtainFailedException, IOException, InterruptedException {
-		index = new IndexStore(new RAMDirectory(),analyzer,analyzer,"body");
+		index = new IndexStore(new RAMDirectory(),analyzer,analyzer,"body",debugQueryParser);
 		index.debugAnalyzerDuringSearch = false;
 	}
 	

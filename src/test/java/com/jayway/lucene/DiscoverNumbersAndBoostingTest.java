@@ -30,10 +30,7 @@ public class DiscoverNumbersAndBoostingTest extends AbstractParentTestCase{
 	
 	@Before
 	public void setupIndex() throws CorruptIndexException, LockObtainFailedException, IOException, InterruptedException, ParseException {
-
-		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
-		index = new IndexStore(new RAMDirectory(),analyzer,analyzer,"body");
-		index.debugAnalyzerDuringSearch = true;
+		index = new IndexStore(new RAMDirectory(),standard,standard,"body",debugQueryParser);
 	}
 
 	@Test

@@ -36,6 +36,8 @@ public abstract class AbstractParentTestCase {
 
 	
 	protected boolean debugAnalyzerOnIndexing = false;
+	protected boolean debugQueryParser = false;
+
 	
 	protected IndexStore index;
 	
@@ -44,6 +46,7 @@ public abstract class AbstractParentTestCase {
 		if(index != null) {	
 			index.clearIndex();
 		}
+		System.out.println(" ----------- Index cleared ------------");
 	}
 	
 	protected NumericField defaultConfiguredField(String key, double value) {

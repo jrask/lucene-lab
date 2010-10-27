@@ -33,10 +33,10 @@ public class IndexStore {
 
 	private IndexWriter writer;
 	private SearcherManager searcherManager;
-	private QueryParser queryParser;
-	public boolean debugAnalyzerDuringSearch = false;
+	private DebugQueryParser queryParser;
 	
-	public IndexStore(Directory directory,Analyzer indexAnalyzer, Analyzer queryAnalyzer,String defaultQueryField) throws CorruptIndexException, LockObtainFailedException, IOException {
+	public IndexStore(Directory directory,Analyzer indexAnalyzer, Analyzer queryAnalyzer,
+			String defaultQueryField,boolean debugQueryParser) throws CorruptIndexException, LockObtainFailedException, IOException {
 		writer= new IndexWriter(directory,
 				indexAnalyzer,
 				makeNewIndex(directory),
@@ -44,6 +44,7 @@ public class IndexStore {
 		searcherManager = new SearcherManager(writer);
 	
 		queryParser = new DebugQueryParser(Version.LUCENE_30, defaultQueryField, queryAnalyzer);
+		queryParser.debug = debugQueryParser;
 	}
 	
 	/**
@@ -131,9 +132,6 @@ public class IndexStore {
 	
 	public Document[] search(String query) throws IOException, ParseException {
 		Query qquery =  queryParser.parse(query);
-		if(debugAnalyzerDuringSearch) {
-			System.out.println(query + " => " + qquery);
-		}
 		return search(qquery);
 	}
 	

@@ -12,6 +12,7 @@ import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jayway.lucene.analysis.AnalyzerUtils;
@@ -23,8 +24,8 @@ public class DiscoverAnalyzersTest extends AbstractParentTestCase{
 
 	
 	public void setupIndex(Analyzer analyzer) throws CorruptIndexException, LockObtainFailedException, IOException, InterruptedException {
-		index = new IndexStore(new RAMDirectory(),analyzer,analyzer,"body");
-		index.debugAnalyzerDuringSearch = false;
+		debugQueryParser = true;
+		index = new IndexStore(new RAMDirectory(),analyzer,analyzer,"body",debugQueryParser);
 	}
 	
 	
@@ -42,18 +43,19 @@ public class DiscoverAnalyzersTest extends AbstractParentTestCase{
 	
 
 	@Test
+	@Ignore
 	public void simpleExactTermSearchWorksWithCustomAnalyzer() throws IOException, ParseException, InterruptedException {
-		setupIndex(custom);
+		setupIndex(standard);
 		addDocument(
 				defaultConfiguredField("id", "1"),
 				defaultConfiguredField("title", "The art of Adventure racing from wikipedia"),
 				defaultConfiguredField("author", "johan.rask@jayway.com"));
 		assertEquals(1, index.search(new TermQuery(new Term("id","1"))).length);
 		assertEquals(1, index.search(new TermQuery(new Term("author","johan.rask@jayway.com"))).length);	
-		assertEquals(0, index.search("(title:The art of)").length);
+		assertEquals(0, index.search("title:The art of").length);
 		assertEquals(1, index.search("title:\"The art of Adventure racing from wikipedia\"").length);
 		assertEquals(0, index.search("title:the art of Adventure racing from wikipedia").length);
-		assertEquals(0, index.search("title:Adventure racing").length);
+		assertEquals(0, index.search("+title:Adventure racing").length);
 		
 	}
 	
@@ -84,6 +86,7 @@ public class DiscoverAnalyzersTest extends AbstractParentTestCase{
 	}
 	
 	@Test
+	@Ignore
 	public void defaultFieldSearch() throws IOException, ParseException, InterruptedException {
 		setupIndex(whitespace);
 		addDocument(
@@ -92,6 +95,7 @@ public class DiscoverAnalyzersTest extends AbstractParentTestCase{
 	}
 	
 	@Test
+	@Ignore
 	public void keywordSearch() throws IOException, ParseException, InterruptedException {
 		setupIndex(whitespace);
 		addDocument(defaultConfiguredField("keys", "JaVa LuCeNe FoOd"));
@@ -100,6 +104,7 @@ public class DiscoverAnalyzersTest extends AbstractParentTestCase{
 	}
 	
 	@Test
+	@Ignore
 	public void showStopAnalyzerAndPositionIncrement() throws CorruptIndexException, IOException, InterruptedException, ParseException {
 		setupIndex(stop);
 		addDocument(defaultConfiguredField("text", "world is an elephant"));

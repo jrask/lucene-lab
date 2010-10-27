@@ -25,8 +25,7 @@ import com.jayway.lucene.index.IndexStore;
 public class DiscoverQueryTest extends AbstractParentTestCase {
 
 	public void setupIndex(Analyzer analyzer) throws CorruptIndexException, LockObtainFailedException, IOException, InterruptedException {
-		index = new IndexStore(new RAMDirectory(),analyzer,analyzer,"body");
-		index.debugAnalyzerDuringSearch = false;
+		index = new IndexStore(new RAMDirectory(),analyzer,analyzer,"body",debugQueryParser);
 	}
 	
 	@Before
