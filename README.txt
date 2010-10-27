@@ -25,7 +25,8 @@ writing to an index and searching the index.
  Analysis
 #####################
 
-1.1. Go through each testcase in DiscoverAnalyzersTest.java and make sure that you understand
+1.1. Go through simpleExactTermSearchWorksWithCustomAnalyzer() testcase in
+ DiscoverAnalyzersTest.java and make sure that you understand
  what it does and why you get those results. Open CustomAnalyzer.java and have
  a quick look at it.
  [We can go through the code to explain what it does?]
@@ -39,7 +40,8 @@ writing to an index and searching the index.
  
  Mark the testcase with @Ignore and remove all other @Ignore and run the
  tests again. 
- Checkout the code. Does it work as expected? How would you like it to work?
+
+ Go through the testcases. Does it work as expected? How would you like it to work?
  
  Discussions?!
  
@@ -54,12 +56,14 @@ writing to an index and searching the index.
 	Run the tests again and try to figure out how to change all searches so 
 	that it works with this analyzer.
 
+Open DiscoverMoreAnalyzers.java
+
 1.5. Change the field configuration of id so that the term search for id does not
  return any documents.
 
 1.6. Field "keys" should be case sensitive so a search for "java" should not match
   "JaVa". It is important that other fields work as expected. There are a number
-  of ways to do this, but one way gives you extra points.
+  of ways to do this, but one way gives you extra points!
   
 1.7 - Extra assignment, change CustomAnalyzer so it outputs the same result as
       SimpleAnalyzer.

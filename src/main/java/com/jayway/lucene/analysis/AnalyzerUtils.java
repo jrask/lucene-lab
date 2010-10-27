@@ -21,6 +21,7 @@ public class AnalyzerUtils {
 			displayTokens(analyzer.tokenStream("contents", new StringReader(
 					text)));
 		}
+		
 	}
 
 	public static void displayTokens(TokenStream stream) {

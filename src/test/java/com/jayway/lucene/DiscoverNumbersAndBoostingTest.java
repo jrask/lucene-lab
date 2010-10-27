@@ -1,4 +1,4 @@
-package com.jayway.lucene.analysis;
+package com.jayway.lucene;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -20,10 +20,11 @@ import org.apache.lucene.util.Version;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.jayway.lucene.ParentTestCase;
 import com.jayway.lucene.index.IndexStore;
 
-public class DiscoverNumbersAndBoostingTest extends ParentTestCase{
+
+
+public class DiscoverNumbersAndBoostingTest extends AbstractParentTestCase{
 
 	private static final DateFormat format = new SimpleDateFormat("yyyyMMdd");
 	

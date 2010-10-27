@@ -1,4 +1,4 @@
-package com.jayway.lucene.analysis;
+package com.jayway.lucene;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -6,48 +6,25 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.KeywordAnalyzer;
-import org.apache.lucene.analysis.SimpleAnalyzer;
-import org.apache.lucene.analysis.StopAnalyzer;
-import org.apache.lucene.analysis.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.jayway.lucene.ParentTestCase;
+import com.jayway.lucene.analysis.AnalyzerUtils;
 import com.jayway.lucene.index.IndexStore;
 import com.jayway.lucene.index.IndexUtils;
 
-public class DiscoverAnalyzersTest extends ParentTestCase{
+public class DiscoverAnalyzersTest extends AbstractParentTestCase{
 	
-	private Analyzer standard = new StandardAnalyzer(Version.LUCENE_30);
-	private Analyzer whitespace = new WhitespaceAnalyzer();
-	private Analyzer simple = new SimpleAnalyzer();
-	private Analyzer keyword = new KeywordAnalyzer();
-	private Analyzer stop = new StopAnalyzer(Version.LUCENE_30);
-	private Analyzer custom = new CustomAnalyzer();
 
 	
-	@Before
-	public void setupIndex() throws CorruptIndexException, LockObtainFailedException, IOException, InterruptedException {
-		index = new IndexStore(new RAMDirectory(),custom,custom,"body");
+	public void setupIndex(Analyzer analyzer) throws CorruptIndexException, LockObtainFailedException, IOException, InterruptedException {
+		index = new IndexStore(new RAMDirectory(),analyzer,analyzer,"body");
 		index.debugAnalyzerDuringSearch = false;
-		addDocument(
-				defaultConfiguredField("id", "1"),
-				defaultConfiguredField("title", "The art of Adventure racing from wikipedia"),
-				defaultConfiguredField("preamble", "This article describes a little about " +
-					"Adventure racing and is taken from wikipedia"),
-				IndexUtils.createField("body", new File("src/main/resources/body.txt")),
-				defaultConfiguredField("author", "johan.rask@jayway.com"),
-				defaultConfiguredField("keys", "JaVa LuCeNe FoOd"));
 	}
 	
 	
@@ -58,7 +35,6 @@ public class DiscoverAnalyzersTest extends ParentTestCase{
 	 * 
 	 */
 	@Test
-	//@Ignore
 	public void displayAnalyzerTokens() throws IOException {
 		AnalyzerUtils.displayTokens("The art of Lucene, by Johan (johan.rask@jayway.com) 2010",
 				standard,whitespace,simple,keyword,stop,custom);
@@ -66,7 +42,12 @@ public class DiscoverAnalyzersTest extends ParentTestCase{
 	
 
 	@Test
-	public void simpleExactTermSearchWorksWithCustomAnalyzer() throws IOException, ParseException {
+	public void simpleExactTermSearchWorksWithCustomAnalyzer() throws IOException, ParseException, InterruptedException {
+		setupIndex(custom);
+		addDocument(
+				defaultConfiguredField("id", "1"),
+				defaultConfiguredField("title", "The art of Adventure racing from wikipedia"),
+				defaultConfiguredField("author", "johan.rask@jayway.com"));
 		assertEquals(1, index.search(new TermQuery(new Term("id","1"))).length);
 		assertEquals(1, index.search(new TermQuery(new Term("author","johan.rask@jayway.com"))).length);	
 		assertEquals(0, index.search("(title:The art of)").length);
@@ -78,16 +59,23 @@ public class DiscoverAnalyzersTest extends ParentTestCase{
 	
 	
 	@Test
-	@Ignore
-	public void termSearch() throws IOException, ParseException {
+	public void termSearch() throws IOException, ParseException, InterruptedException {
+		setupIndex(whitespace);
+		addDocument(
+				defaultConfiguredField("id", "1"),
+				defaultConfiguredField("title", "The art of Adventure racing from wikipedia"),
+				defaultConfiguredField("author", "johan.rask@jayway.com"));
 		assertEquals(1, index.search("title:The").length);
 		assertEquals(0, index.search("title:the").length);
 		assertEquals(1, index.search("title:art").length);
 	}
 	
 	@Test
-	@Ignore
 	public void phraseSearches() throws CorruptIndexException, IOException, InterruptedException, ParseException {		
+		setupIndex(whitespace);
+		addDocument(
+				defaultConfiguredField("title", "The art of Adventure racing from wikipedia"),
+				IndexUtils.createField("body", new File("src/main/resources/body.txt")));
 		assertEquals(1, index.search("body:\"traverse mountainous terrain while carrying\"").length);
 		assertEquals(0, index.search("body:\"to Be\"").length);	
 		assertEquals(1, index.search("title:the art of Adventure racing from wikipedia").length);
@@ -96,16 +84,32 @@ public class DiscoverAnalyzersTest extends ParentTestCase{
 	}
 	
 	@Test
-	@Ignore
-	public void defaultFieldSearch() throws IOException, ParseException {
+	public void defaultFieldSearch() throws IOException, ParseException, InterruptedException {
+		setupIndex(whitespace);
+		addDocument(
+				IndexUtils.createField("body", new File("src/main/resources/body.txt")));
 		assertEquals(1, index.search("traverse mountainous terrain while carrying").length);
 	}
 	
 	@Test
-	@Ignore
-	public void keywordSearch() throws IOException, ParseException {
+	public void keywordSearch() throws IOException, ParseException, InterruptedException {
+		setupIndex(whitespace);
+		addDocument(defaultConfiguredField("keys", "JaVa LuCeNe FoOd"));
 		assertEquals(1, index.search("keys:JaVa").length);
 		assertEquals(0,  index.search("keys:java").length);
 	}
+	
+	@Test
+	public void showStopAnalyzerAndPositionIncrement() throws CorruptIndexException, IOException, InterruptedException, ParseException {
+		setupIndex(stop);
+		addDocument(defaultConfiguredField("text", "world is an elephant"));
 
+		assertEquals(1, index.search("text:world elephant").length);
+		assertEquals(1, index.search("text:\"world is an elephant\"").length);
+		assertEquals(0, index.search("text:\"world elephant\"").length);
+		assertEquals(0, index.search("text:\"world is big elephant\"").length);
+		assertEquals(1, index.search("text:\"world an is elephant\"").length);
+		assertEquals(1, index.search("text:\"world the the elephant\"").length);
+	}
+	
 }

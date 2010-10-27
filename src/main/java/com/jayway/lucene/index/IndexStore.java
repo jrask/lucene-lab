@@ -151,4 +151,9 @@ public class IndexStore {
 	public Analyzer getAnalyzer() {
 		return writer.getAnalyzer();
 	}
+
+	public QueryParser getQueryParser() {
+		return queryParser;
+		
+	}
 }
