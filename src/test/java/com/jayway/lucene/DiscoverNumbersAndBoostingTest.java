@@ -41,6 +41,7 @@ public class DiscoverNumbersAndBoostingTest extends AbstractParentTestCase{
 		
 		Query q = NumericRangeQuery.newDoubleRange("price",10d,19d, false, false);
 		assertEquals(1, index.search(q).length);
+		assertEqualsString(q, 0, "price", "10.1");
 	}
 	
 	@Test

@@ -18,7 +18,8 @@ Preparations
 ##################################
 
 Take a look at IndexStore.java. This class encapsulates some functionality like
-writing to an index and searching the index. 
+writing to an index and searching the index. Go through it and make sure you
+understand what it does.
 
 
 #########################################
