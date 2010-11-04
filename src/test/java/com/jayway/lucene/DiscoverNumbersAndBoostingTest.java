@@ -18,6 +18,7 @@ import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jayway.lucene.index.IndexStore;
@@ -34,10 +35,10 @@ public class DiscoverNumbersAndBoostingTest extends AbstractParentTestCase{
 	}
 
 	@Test
+	@Ignore
 	public void testPriceRangeQuery() throws IOException, InterruptedException {
 
-		addDocument(defaultConfiguredField("price", 10.1));
-		addDocument(1.5f,defaultConfiguredField("price", 20.5));
+		//TODO - Index documents, use addDocument()
 		
 		Query q = NumericRangeQuery.newDoubleRange("price",10d,19d, false, false);
 		assertEquals(1, index.search(q).length);
@@ -45,9 +46,9 @@ public class DiscoverNumbersAndBoostingTest extends AbstractParentTestCase{
 	}
 	
 	@Test
+	@Ignore
 	public void testDateRangeQuery() throws ParseException, IOException, org.apache.lucene.queryParser.ParseException, InterruptedException {
-		addDocument(defaultConfiguredField("date", format.parse("20100102").getTime()));
-		addDocument(defaultConfiguredField("date", format.parse("20100104").getTime()));
+		//TODO - Index documents, use addDocument()
 		
 		Date from = format.parse("20100101");
 		Date to = format.parse("20100103");
@@ -55,6 +56,12 @@ public class DiscoverNumbersAndBoostingTest extends AbstractParentTestCase{
 				to.getTime(), false, false);
 		assertEquals(1, index.search(q).length);
 	}
+	
+	/*
+	 * 
+	 *  BOOOOOOOOOOOOOOSTING
+	 * 
+	 */
 	
 	
 	//TODO - Explain why the result is ordered the way it is?
@@ -71,16 +78,20 @@ public class DiscoverNumbersAndBoostingTest extends AbstractParentTestCase{
 	}
 
 	@Test
+	@Ignore
 	public void showSimpleExplicitDocumentBoosting() {
 		//TODO - Copy code in test above and explicit boosting to document so that
 		// the sort order is reversed
-		// assertEquals("This is a longer sentence with a title", docs[0].get("title"));
+		Document docs[] = null;
+		assertEquals("This is a longer sentence with a title", docs[0].get("title"));
 	}
 	
 	@Test
+	@Ignore
 	public void showSimpleExplicitFieldBoosting() {
 		//TODO - Copy code in test above and explicit boosting to fields so that
 		// the sort order is reversed		
-		// assertEquals("This is a longer sentence with a title", docs[0].get("title"));
+		Document docs[] = null;
+		assertEquals("This is a longer sentence with a title", docs[0].get("title"));
 	}
 }

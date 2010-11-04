@@ -18,6 +18,7 @@ import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jayway.lucene.index.IndexStore;
@@ -38,13 +39,15 @@ public class DiscoverQueryTest extends AbstractParentTestCase {
 	}
 
 	@Test
+	@Ignore
 	public void termQuery()  {
 		//TODO - Write a TermQuery that returns a hit for id
-		TermQuery query = new TermQuery(new Term("id","1"));
+		TermQuery query = null;
 		assertEquals(1, countResults(query));
 	}
 	
 	@Test
+	@Ignore
 	public void termRangeQuery() throws CorruptIndexException, IOException, InterruptedException {
 		addDocument(defaultConfiguredField("name", "Anna"));
 		addDocument(defaultConfiguredField("name", "Britta"));
@@ -53,32 +56,34 @@ public class DiscoverQueryTest extends AbstractParentTestCase {
 		addDocument(defaultConfiguredField("name", "Davidsson"));
 		addDocument(defaultConfiguredField("name", "…rjan"));
 		
-		// Construct this query so the asserts work
-		TermRangeQuery query = new TermRangeQuery("name", "a","c", true, true);
+		// TODO - Construct this query so the asserts work
+		TermRangeQuery query = null; 
 		assertEquals(2, countResults(query));
 		assertEqualsString(query,0, "name", "Anna");
 		assertEqualsString(query,1, "name", "Britta");
 		
-		// Reconstruct this query so the asserts work
-		query = new TermRangeQuery("name", "c",null, true, true);
+		//TODO-  Reconstruct this query so the asserts work
+		query = null;
 		assertEquals(4, countResults(query));
 		assertEqualsString(query,0, "name", "Cissi");
 		assertEqualsString(query,3, "name", "…rjan");
 	}
 	
 	@Test
+	@Ignore
 	public void prefixQuery() {
-		
-		PrefixQuery query = new PrefixQuery(new Term("author","joh"));
+		// TODO - Construct this query so the asserts work
+		PrefixQuery query = null;
 		assertEquals(1, countResults(query));
 		assertEqualsString(query,0, "author", "johan.rask@jayway.com");
-		
-		query = new PrefixQuery(new Term("title","rac"));
+		// TODO - Construct this query so the asserts work
+		query = null;
 		assertEquals(1, countResults(query));
 		assertEqualsString(query,0, "title", "The art of Adventure racing from wikipedia");
 	}
 	  
 	@Test
+	@Ignore
 	public void booleanQuery() {
 		addDocument(
 				defaultConfiguredField("id", "2"),
@@ -88,12 +93,9 @@ public class DiscoverQueryTest extends AbstractParentTestCase {
 		TermQuery termQuery2 = new TermQuery(new Term("title","sleeping"));
 		PrefixQuery termQuery3 = new PrefixQuery(new Term("author","johan"));
 		BooleanQuery query = new BooleanQuery();
-		// Combine all these queries so the asserts are correct
 		
-		query.add(termQuery, Occur.SHOULD);
-		query.add(termQuery2, Occur.MUST_NOT);
-		query.add(termQuery3, Occur.MUST);
-		System.out.println(query);
+		// TODO - Combine all these queries with query so the asserts are correct
+		
 		assertCountResults(1, query);
 		assertEqualsString(query, 0, "id", "1");
 	}
@@ -114,6 +116,7 @@ public class DiscoverQueryTest extends AbstractParentTestCase {
 	}
 	
 	@Test
+	@Ignore
 	public void wildcardQuery() {
 		addDocument(defaultConfiguredField("text", "hoppsan"));
 		addDocument(defaultConfiguredField("text", "hejsan"));
@@ -121,21 +124,26 @@ public class DiscoverQueryTest extends AbstractParentTestCase {
 		addDocument(defaultConfiguredField("text", "heja"));
 		addDocument(defaultConfiguredField("text", "loppa"));
 		
-		WildcardQuery query = new WildcardQuery(new Term("text","?opp*"));
+		// TODO - Construct this query so the asserts work
+		WildcardQuery query = null;
 		assertCountResults(3, query);
 		assertEqualsString(query, 0, "text", "hoppsan");
 		assertEqualsString(query, 1, "text", "hoppa");
 		assertEqualsString(query, 2, "text", "loppa");
 		
-		query = new WildcardQuery(new Term("text","*sa?"));
+		query = null;
 		assertCountResults(2, query);
 		assertEqualsString(query, 0, "text", "hoppsan");
 		assertEqualsString(query, 1, "text", "hejsan");
 	}
 	
 	@Test
+	@Ignore
 	public void fuzzyQuery() {
-		FuzzyQuery query = new FuzzyQuery(new Term("title","adventurous"));
+		// TODO - Construct this query so the asserts work
+		// Ok, this is simple but at least try it with a few
+		// different values
+		FuzzyQuery query = null;
 		assertCountResults(1, query);
 	}
 	

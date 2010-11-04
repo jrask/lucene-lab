@@ -43,9 +43,9 @@ public class DiscoverAnalyzersTest extends AbstractParentTestCase{
 	
 
 	@Test
-	@Ignore
+	//@Ignore
 	public void simpleExactTermSearchWorksWithCustomAnalyzer() throws IOException, ParseException, InterruptedException {
-		setupIndex(standard);
+		setupIndex(custom);
 		addDocument(
 				defaultConfiguredField("id", "1"),
 				defaultConfiguredField("title", "The art of Adventure racing from wikipedia"),

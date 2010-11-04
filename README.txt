@@ -55,13 +55,17 @@ Open DiscoverAnalyzersTest.java
  Does the code and result make sense?
  How would you expect it to work?
  Discussions?!
+ Perhaps explain exactly what happens on the whiteboard.
 
-1.2. Change the call to setupIndex() method and change to use whitespace analyzer instead of 
+
+1.2. Still same testcase.
+  Change the call to setupIndex() method and change to use whitespace analyzer instead of 
  custom analyzer and run the test again. What happens?!
  Make some changes in the test case to see if you can make it work.
  
  
-1.3. Change back to CustomAnalyzer again and try to figure out how to change
+1.3. Still same testcase.
+ Change back to CustomAnalyzer again and try to figure out how to change
  the implementation of CustomAnalyzer so that it will work with the current
  test suite.
   
@@ -77,9 +81,7 @@ Open DiscoverMoreAnalyzers.java
 1.6. Field "keys" should be case sensitive so a search for "java" should not match
   "JaVa". It is important that other fields work as expected. There are a number
   of ways to do this, but one way gives you extra points!
-  
-1.7 - Extra assignment, change CustomAnalyzer so it outputs the same result as
-      SimpleAnalyzer.
+
 
 #################################
  Numeric Fields
